@@ -1,138 +1,113 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>AI App & Bot Builder</title>
-  <style>
-    :root{{--accent:#00eaff;--bg:#0a0a10;--card:#0f1113;--text:#cdeef6}}
-    body{{margin:0;font-family:system-ui,Arial;background:var(--bg);color:var(--text)}}
-    header{{padding:18px;background:#050608;color:var(--accent);font-weight:700;text-align:center}}
-    .wrap{{max-width:980px;margin:18px auto;padding:18px}}
-    .tabs{{display:flex;gap:8px;justify-content:center;margin-bottom:12px}}
-    .tabBtn{{padding:10px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:#07070a;color:var(--text);cursor:pointer}}
-    .tabBtn.active{{background:var(--accent);color:#001;box-shadow:0 6px 20px rgba(0,0,0,.6)}}
-    .card{{background:var(--card);padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.02)}}
-    textarea,input{{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:#050508;color:var(--text)}}
-    button{{padding:10px 14px;border-radius:8px;border:none;background:var(--accent);color:#001;font-weight:700;cursor:pointer}}
-    .twoCol{{display:grid;grid-template-columns:1fr 380px;gap:16px}}
-    pre.output{{white-space:pre-wrap;word-wrap:break-word;background:#071018;color:var(--accent);padding:10px;border-radius:8px;min-height:120px}}
-    footer{{color:#6ea6b0;font-size:13px;text-align:center;margin-top:12px}}
-    @media(max-width:880px){{.twoCol{{grid-template-columns:1fr}}}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Tools Dashboard</title>
+
+<style>
+body{
+background:#0f172a;
+color:white;
+font-family:Arial;
+text-align:center;
+padding:20px;
+}
+
+h1{
+color:#38bdf8;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+}
+
+.tool{
+background:#1e293b;
+padding:20px;
+margin:15px;
+border-radius:10px;
+}
+
+textarea,input{
+width:90%;
+padding:10px;
+margin:10px;
+border-radius:6px;
+border:none;
+}
+
+button{
+padding:12px 20px;
+background:#38bdf8;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+button:hover{
+background:#0ea5e9;
+}
+</style>
 </head>
+
 <body>
-<header>AI App & Bot Builder — Dark AI Style</header>
-<div class="wrap">
-  <div class="tabs">
-    <button class="tabBtn active" data-tab="builder">App Builder</button>
-    <button class="tabBtn" data-tab="telegram">Telegram Activator</button>
-  </div>
 
-  <div id="builder" class="card">
-    <div class="twoCol">
-      <div>
-        <h3 style="margin:0 0 8px 0;color:var(--accent)">Chat-style App Builder</h3>
-        <textarea id="prompt" placeholder="Describe the app you want (eg: simple todo using localStorage)"></textarea>
-        <div style="display:flex;gap:8px;margin-top:10px;">
-          <button id="addPrompt">Add to prompts</button>
-          <button id="generate" style="flex:1">Generate & Download</button>
-        </div>
-        <p style="margin-top:8px;color:#88c8cf;font-size:13px">Signed in users can save generated apps to Supabase (optional). Unauthenticated users will get a local download.</p>
-      </div>
-      <div>
-        <h4 style="color:var(--accent);margin-top:0">Preview / Output</h4>
-        <pre id="preview" class="output">No generated app yet.</pre>
-      </div>
-    </div>
-  </div>
+<h1>AI Tools Builder 🚀</h1>
 
-  <div id="telegram" class="card" style="display:none;margin-top:12px">
-    <h3 style="color:var(--accent);margin-top:0">Telegram Bot Activator</h3>
-    <input id="token" placeholder="Paste Telegram Bot Token (123456:ABC-...)" />
-    <div style="display:flex;gap:8px;margin-top:10px">
-      <button id="activate">Activate (validate)</button>
-      <button id="listBots">My Bots (from Supabase)</button>
-    </div>
-    <pre id="botOutput" class="output">Status will appear here.</pre>
-  </div>
+<div class="container">
 
-  <div style="margin-top:12px" class="card">
-    <h4 style="color:var(--accent);margin:0 0 6px 0">Supabase connection (for this site)</h4>
-    <pre style="background:#071018;color:#9feff4;padding:10px;border-radius:8px">Project URL: https://cmhvazznasvaytjccuda.supabase.co
-Anon key: (hidden)</pre>
-    <p style="color:#88c8cf;font-size:13px">Your anon key is embedded in the deployed site. Do not share your service_role key. If you think the anon key was leaked, rotate it in Supabase settings.</p>
-  </div>
-
-  <footer>Built for you — Upload to GitHub + Vercel to deploy</footer>
+<div class="tool">
+<h2>📱 APK Builder</h2>
+<input id="appname" placeholder="Enter app name">
+<textarea id="appdesc" placeholder="Describe the Android app"></textarea>
+<button onclick="generateAPK()">Generate App Code</button>
+<p id="apkresult"></p>
 </div>
 
-<script type="module">
-// Supabase client (public anon key)
-const SUPABASE_URL = "https://cmhvazznasvaytjccuda.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNtaHZhenpuYXN2YXl0amNjdWRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ3NDc2NTAsImV4cCI6MjA4MDMyMzY1MH0.a6gYo4RfHsjT3clu5r5zm0_tjhdfbVP441v2tWn-7qA";
+<div class="tool">
+<h2>🤖 Telegram Bot Builder</h2>
+<input id="botname" placeholder="Bot name">
+<input id="bottoken" placeholder="Bot token">
+<button onclick="generateBot()">Generate Bot Code</button>
+<p id="botresult"></p>
+</div>
 
-import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm').then(mod => {
-  const { createClient } = mod;
-  window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-}).catch(e => console.error('Supabase client import error', e));
+<div class="tool">
+<h2>🎬 Word → Video Generator</h2>
+<textarea id="videotext" placeholder="Write story or text"></textarea>
+<button onclick="generateVideo()">Create Video Script</button>
+<p id="videoresult"></p>
+</div>
 
-// Tab handling
-document.querySelectorAll('.tabBtn').forEach(btn => {
-  btn.addEventListener('click', ()=>{
-    document.querySelectorAll('.tabBtn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const t = btn.getAttribute('data-tab');
-    document.getElementById('builder').style.display = t === 'builder' ? 'block' : 'none';
-    document.getElementById('telegram').style.display = t === 'telegram' ? 'block' : 'none';
-  });
-});
+</div>
 
-// Simple local chat history
-const prompts = [];
-document.getElementById('addPrompt').onclick = ()=>{
-  const p = document.getElementById('prompt').value.trim();
-  if(!p) return alert('Enter prompt');
-  prompts.push(p);
-  document.getElementById('preview').innerText = prompts.join("\n---\n");
-  document.getElementById('prompt').value = '';
+<script>
+
+function generateAPK(){
+let name=document.getElementById("appname").value
+let desc=document.getElementById("appdesc").value
+
+document.getElementById("apkresult").innerText=
+"Generated Android app idea:\nApp Name: "+name+"\nDescription: "+desc+"\nFiles: MainActivity.java, activity_main.xml"
 }
 
-// Generate app (local fallback)
-document.getElementById('generate').onclick = ()=>{
-  const spec = prompts.join("\n---\n");
-  if(!spec) return alert('Add prompt(s) first');
-  const title = spec.split('\n')[0] || 'Generated App';
-  const generated = `<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>${title}</title><style>body{font-family:system-ui;padding:20px}</style></head><body><h1>${title}</h1><pre>${spec.replace(/</g,'&lt;')}</pre><p>Generated by AI App Builder (starter)</p></body></html>`;
-  document.getElementById('preview').innerText = generated;
-  const blob = new Blob([generated], {type:'text/html'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'generated-app.html'; a.click(); a.remove();
+function generateBot(){
+let name=document.getElementById("botname").value
+
+document.getElementById("botresult").innerText=
+"Telegram Bot '"+name+"' code template generated."
 }
 
-// Activate Telegram: simple validation call
-document.getElementById('activate').onclick = async ()=>{
-  const token = document.getElementById('token').value.trim();
-  if(!token) return alert('Paste a token');
-  document.getElementById('botOutput').innerText = 'Checking...';
-  try{
-    const res = await fetch(`https://api.telegram.org/bot${encodeURIComponent(token)}/getMe`);
-    const data = await res.json();
-    document.getElementById('botOutput').innerText = JSON.stringify(data, null, 2);
-  } catch(e){
-    document.getElementById('botOutput').innerText = 'Network error: ' + e.message;
-  }
+function generateVideo(){
+let text=document.getElementById("videotext").value
+
+document.getElementById("videoresult").innerText=
+"Video script created from your text:\n"+text
 }
 
-// List bots: if user logged into Supabase, fetch bots table (RLS applies)
-document.getElementById('listBots').onclick = async ()=>{
-  if(!window.supabase) return alert('Supabase not ready');
-  const session = await window.supabase.auth.getSession();
-  if(!session?.data?.session) return alert('Sign in needed to list bots. Use Supabase Auth separately.');
-  const { data, error } = await window.supabase.from('bots').select('*');
-  if(error) document.getElementById('botOutput').innerText = 'DB error: ' + JSON.stringify(error);
-  else document.getElementById('botOutput').innerText = JSON.stringify(data, null, 2);
-}
 </script>
+
 </body>
 </html>
